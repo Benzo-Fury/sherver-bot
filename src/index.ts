@@ -54,7 +54,3 @@ Sern.init({
 });
 
 client.login(process.env.TOKEN);
-
-
-
-
