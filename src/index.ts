@@ -12,7 +12,7 @@ const client = new Client({
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.MessageContent, //Make sure this is enabled for text commands!
+		GatewayIntentBits.MessageContent,
 	],
 });
 
@@ -37,11 +37,9 @@ export const useContainer = Sern.makeDependencies<MyDependencies>({
 			.upsert({ '@sern/logger': single(() => new DefaultLogging()) }), //using upsert because it replaces the default provided
 });
 
-//View docs for all options
 Sern.init({
-	defaultPrefix: '!', // removing defaultPrefix will shut down text commands
 	commands: 'dist/commands',
-	// events: 'dist/events' (optional),
+	events: 'dist/events',
 	containerConfig: {
 		get: useContainer,
 	},
