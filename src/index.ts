@@ -1,4 +1,5 @@
 import { Client, GatewayIntentBits } from 'discord.js';
+import dotenv from 'dotenv'
 import {
 	Dependencies,
 	Sern,
@@ -6,6 +7,9 @@ import {
 	Singleton,
 	DefaultLogging,
 } from '@sern/handler';
+
+//configuring dotenv so it cacn be used.
+dotenv.config()
 
 const client = new Client({
 	intents: [
@@ -39,10 +43,10 @@ export const useContainer = Sern.makeDependencies<MyDependencies>({
 
 Sern.init({
 	commands: 'dist/commands',
-	events: 'dist/events',
+	//events: 'dist/events',
 	containerConfig: {
 		get: useContainer,
 	},
 });
 
-client.login();
+client.login(process.env.TOKEN);
