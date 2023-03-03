@@ -1,5 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import dotenv from 'dotenv'
+import pkg from "mongoose";
 import {
 	Dependencies,
 	Sern,
@@ -24,6 +25,7 @@ const client = new Client({
 interface MyDependencies extends Dependencies {
 	'@sern/client': Singleton<Client>;
 	'@sern/logger': Singleton<DefaultLogging>;
+	mongoose: Singleton<pkg.Connection>;
 }
 /**
  * Where all of your dependencies are composed.
@@ -38,12 +40,14 @@ export const useContainer = Sern.makeDependencies<MyDependencies>({
 	build: (root) =>
 		root
 			.add({ '@sern/client': single(() => client) })
-			.upsert({ '@sern/logger': single(() => new DefaultLogging()) }), //using upsert because it replaces the default provided
+			.upsert({ '@sern/logger': single(() => new DefaultLogging()) }) //using upsert because it replaces the default provided
+			.add({ mongoose: single(() => pkg.connection) }),
+			
 });
 
 Sern.init({
 	commands: 'dist/commands',
-	//events: 'dist/events',
+	events: 'dist/events',
 	containerConfig: {
 		get: useContainer,
 	},
