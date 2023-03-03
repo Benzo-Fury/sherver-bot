@@ -45,7 +45,7 @@ export default commandModule({
           value: "Harassment",
         },
         {
-          name: "Posting Usafe Material",
+          name: "Posting Unsafe Material",
           value: "Unsafe material",
         },
         {
