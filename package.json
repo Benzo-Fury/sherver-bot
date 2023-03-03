@@ -18,7 +18,8 @@
     "@sern/handler": "^2.5.0",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
-    "mongoose": "^7.0.0"
+    "mongoose": "^7.0.0",
+    "uniqid": "^5.4.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.25",
