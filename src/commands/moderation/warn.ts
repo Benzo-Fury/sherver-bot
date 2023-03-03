@@ -4,8 +4,11 @@ import {
   ApplicationCommandOptionType,
   EmbedBuilder,
   Events,
+  Interaction,
   ModalActionRowComponentBuilder,
   ModalBuilder,
+  ModalSubmitInteraction,
+  TextChannel,
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
@@ -60,81 +63,123 @@ export default commandModule({
     },
   ],
   execute: async (ctx, args) => {
-    let reason = ctx.interaction.options.getString("reason")
-      ? ctx.interaction.options.getString("reason")
-      : "No Reason Specified.";
+    let rReason =
+      ctx.interaction.options.getString("reason") ?? "No Reason Specified.";
     const user = ctx.interaction.options.getUser("user")!;
     const id = uniqid("w-");
-    //creating embed
-    const embed = new EmbedBuilder()
-      .setAuthor({ name: user?.username, iconURL: user.displayAvatarURL() })
-      .setColor("#ff5050")
-      .addFields(
-        {
-          name: `User Warned:`,
-          value: user.username,
-        },
-        {
-          name: "Channel:",
-          value: `<#${ctx.channel?.id}>`,
-        },
-        {
-          name: "ID:",
-          value: id,
-        }
+    let logChannel: TextChannel | null = (await ctx.client.channels.fetch(
+      "1080302218458177547"
+    )) as TextChannel | null;
+    if (!logChannel) {
+      return ctx.interaction.reply(
+        "NO LOG CHANNEL FOUND OR ITS TYPE HAS BEEN CHANGED. WARN VOIDED"
       );
-
-    if (reason === "Other") {
-      //Creating modal to check what mod would like to specify as the reason
-      const modal = new ModalBuilder()
-        .setCustomId("reasonCheckModal")
-        .setTitle("Other Reason");
-
-      const reasonInput = new TextInputBuilder()
-        .setCustomId("otherReasonInput")
-        .setLabel("What's your favorite color?")
-        .setStyle(TextInputStyle.Short);
-      const firstActionRow =
-        new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-          reasonInput
-        );
-      modal.addComponents(firstActionRow);
-      await ctx.interaction.showModal(modal);
-      ctx.client.on(Events.InteractionCreate, async (interaction) => {
-        if (
-          !interaction.isModalSubmit() ||
-          interaction.customId !== "reasonCheckModal"
-        )
-          return;
-        reason = interaction.fields.getTextInputValue("otherReasonInput");
-        embed.addFields({
-          name: "Reason:",
-          value: reason,
-        });
-        await interaction.reply({ embeds: [embed] });
-      });
-    } else {
-      embed.addFields({
-        name: "Reason:",
-        value: `${reason}`,
-      });
-      await ctx.interaction.reply({ embeds: [embed] });
     }
-    //updating database
-    await warnSchema.create({
-      _id: id,
-      channel: ctx.channel?.id,
-      mod: ctx.user.id,
-      time: new Date(),
-      reason: reason,
-      user: user,
-    });
 
-    //alerting user
+    async function waitForModalSubmit(): Promise<ModalSubmitInteraction> {
+      return new Promise((resolve) => {
+        const listener = (interaction: Interaction) => {
+          if (interaction.isModalSubmit()) {
+            ctx.client.off(Events.InteractionCreate, listener);
+            resolve(interaction);
+          }
+        };
+        ctx.client.on(Events.InteractionCreate, listener);
+      });
+    }
+
+    async function warnUser(reason: string) {
+      const isOtherReason = reason === "Other";
+
+      // Set up the modal and input fields for other reason, if applicable
+      let otherReasonInput;
+      let modal;
+      if (isOtherReason) {
+        otherReasonInput = new TextInputBuilder()
+          .setCustomId("otherReasonInput")
+          .setLabel("Please specify the reason:")
+          .setStyle(TextInputStyle.Short);
+
+        modal = new ModalBuilder()
+          .setCustomId("reasonCheckModal")
+          .setTitle("Other Reason")
+          .addComponents(
+            new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+              otherReasonInput
+            )
+          );
+
+        // Show the modal and wait for user input
+        await ctx.interaction.showModal(modal);
+        const modalSub = await waitForModalSubmit();
+        reason = isOtherReason
+          ? modalSub.fields.getTextInputValue("otherReasonInput")
+          : rReason;
+      }
+
+      // Add the reason to the embed
+      const logEmbed = new EmbedBuilder()
+        .setColor("#ff5050")
+        .addFields(
+          { name: "Reason:", value: reason },
+          { name: "ID:", value: id },
+          {
+            name: "Channel:",
+            value: `<#${ctx.channel?.id}>`,
+          },
+          {
+            name: "Moderator",
+            value: ctx.user.id,
+          }
+        )
+        .setFooter({ text: `ID: ${id}` })
+        .setAuthor({
+          name: user.username,
+          iconURL: user.displayAvatarURL(),
+        });
+
+      // Alert the user and log the warning
+      await logChannel?.send({ embeds: [logEmbed] });
+      try {
+        const userEmbed = new EmbedBuilder()
+          .setColor("#ff5050")
+          .addFields(
+            { name: "Reason:", value: reason, inline: true },
+            { name: "ID:", value: id, inline: true }
+          )
+          .setAuthor({
+            name: "You have been Warned!",
+            iconURL: user.displayAvatarURL(),
+          })
+          .setTimestamp();
+        await user.send({ embeds: [userEmbed] });
+      } catch {
+        // TODO: send message in channel alerting mod that user did not get notified
+      }
+
+      // Update the database
+      await warnSchema.create({
+        _id: id,
+        channel: ctx.channel?.id,
+        mod: ctx.user.id,
+        time: new Date(),
+        reason: reason,
+        user: user,
+      });
+    }
+
     try {
-      user.send({ embeds: [embed] });
-    } catch {
-		// TODO: send message in channel alerting mod that user did not get notified
-	}
+      await warnUser(rReason);
+      await ctx.interaction.reply({
+        content: "User has been warned!",
+        ephemeral: true,
+      });
+    } catch (error) {
+      console.error(error);
+      await ctx.interaction.reply({
+        content: "An error occurred.",
+        ephemeral: true,
+      });
+    }
   },
 });
