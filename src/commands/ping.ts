@@ -5,7 +5,7 @@ export default commandModule({
 	type: CommandType.Slash,
 	plugins: [publish()],
 	description: 'A ping command',
-	execute: async (ctx, args) => {
+	execute: async (ctx) => {
 		await ctx.reply('Pong 🏓');
 	},
 });
