@@ -90,7 +90,6 @@ export default commandModule({
       return row;
     }
 
-    console.log(embeds[currentEmbed - 1]);
     const sg = await ctx.reply({
       embeds: [embeds[currentEmbed]],
       components: [createRow(currentEmbed)],
@@ -109,7 +108,6 @@ export default commandModule({
           PermissionsBitField.Flags.KickMembers,
         ])
       ) {
-        console.log(embeds.length, embeds, currentEmbed);
         if (i.customId == "left") {
           //left
           currentEmbed = currentEmbed - 1;
@@ -120,9 +118,7 @@ export default commandModule({
           });
         } else {
           //right
-          console.log(currentEmbed);
           currentEmbed = currentEmbed + 1;
-          console.log(currentEmbed);
           await i.deferUpdate();
           await ctx.interaction.editReply({
             embeds: [embeds[currentEmbed - 1]],
