@@ -28,7 +28,7 @@ export default commandModule({
   execute: async (ctx) => {
     const query = ctx.interaction.options.getString("id");
     if (!query?.startsWith("w-")) return ctx.reply("That is not a valid ID");
-    const result = await warnSchema.findOne({ _id: query });
+    const result: any = await warnSchema.findOne({ _id: query });
     if (!result)
       return ctx.reply({
         content:
