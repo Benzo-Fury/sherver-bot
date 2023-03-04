@@ -143,7 +143,7 @@ export default commandModule({
     );
     collector.on("end", (i) => {
       ctx.interaction.editReply({
-        embeds: [embeds[currentEmbed]],
+        embeds: [embeds[currentEmbed - 1]],
         components: [endRow],
       });
     });
