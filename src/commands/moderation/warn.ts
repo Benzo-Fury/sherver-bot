@@ -23,7 +23,7 @@ export default commandModule({
   plugins: [
     publish(),
     serverOnly(["1080050500155748365"], "This command cannot be used here."),
-    requirePermission("user", ["KickMembers"]),
+    requirePermission("user", ["KickMembers"], 'You are not a moderator'),
   ], //require permissions plugin will ensure user is mod
   description: "Warns the specified user.",
   options: [
@@ -164,7 +164,7 @@ export default commandModule({
         mod: ctx.user.id,
         time: new Date(),
         reason: reason,
-        user: user,
+        user: user.id,
       });
     }
 
