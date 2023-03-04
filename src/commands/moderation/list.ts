@@ -33,7 +33,7 @@ export default commandModule({
   execute: async (ctx) => {
     const user = ctx.interaction.options.getUser("user")!;
     const result = await warnSchema.find({ user: user.id });
-    if (!result)
+    if (result.length === 0) 
       return ctx.reply({
         content: "No warnings have been found for that user.",
         ephemeral: true,
@@ -91,7 +91,7 @@ export default commandModule({
     }
 
     const sg = await ctx.reply({
-      embeds: [embeds[currentEmbed]],
+      embeds: [embeds[currentEmbed - 1]],
       components: [createRow(currentEmbed)],
     });
 
