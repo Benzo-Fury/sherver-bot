@@ -133,7 +133,7 @@ export default commandModule({
             value: ctx.user.id,
           }
         )
-        .setFooter({ text: `ID: ${id}` })
+        .setTimestamp()
         .setAuthor({
           name: user.username,
           iconURL: user.displayAvatarURL(),
