@@ -112,6 +112,7 @@ export default commandModule({
         // Show the modal and wait for user input
         await ctx.interaction.showModal(modal);
         const modalSub = await waitForModalSubmit();
+        await modalSub.deferUpdate()
         reason = isOtherReason
           ? modalSub.fields.getTextInputValue("otherReasonInput")
           : rReason;
