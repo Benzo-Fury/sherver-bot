@@ -62,7 +62,7 @@ export default commandModule({
       ],
     },
   ],
-  execute: async (ctx, args) => {
+  execute: async (ctx) => {
     let rReason =
       ctx.interaction.options.getString("reason") ?? "No Reason Specified.";
     const user = ctx.interaction.options.getUser("user")!;
