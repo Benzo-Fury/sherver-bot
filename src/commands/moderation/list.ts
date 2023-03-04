@@ -33,7 +33,7 @@ export default commandModule({
   execute: async (ctx) => {
     const user = ctx.interaction.options.getUser("user")!;
     const result = await warnSchema.find({ user: user.id });
-    if (result.length === 0) 
+    if (result.length === 0)
       return ctx.reply({
         content: "No warnings have been found for that user.",
         ephemeral: true,
@@ -49,24 +49,34 @@ export default commandModule({
         })
         .addFields(
           {
-            name: "Reason:",
-            value: element.reason,
+            name: "Channel:",
+            value: `<#${element.channel}>`,
+            inline: true,
           },
           {
             name: "User Warned:",
             value: `<@${element.user}>`,
+            inline: true,
           },
           {
             name: "Mod:",
             value: `<@${element.mod}>`,
+            inline: true,
           },
           {
-            name: "Channel:",
-            value: `<#${element.channel}>`,
+            name: "Reason:",
+            value: element.reason,
+            inline: true,
+          },
+          {
+            name: "ID:",
+            value: element._id,
+            inline: true,
           },
           {
             name: "Time:",
             value: element.time,
+            inline: true,
           }
         )
         .setColor("BLACK" as ColorResolvable);
