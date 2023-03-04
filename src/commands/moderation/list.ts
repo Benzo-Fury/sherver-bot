@@ -32,7 +32,7 @@ export default commandModule({
   ],
   execute: async (ctx) => {
     const user = ctx.interaction.options.getUser("user")!;
-    const result = await warnSchema.find({ user: user.id });
+    const result: any = await warnSchema.find({ user: user.id });
     if (result.length === 0)
       return ctx.reply({
         content: "No warnings have been found for that user.",
@@ -41,7 +41,7 @@ export default commandModule({
 
     //creating embeds
     let embeds: EmbedBuilder[] = [];
-    result.forEach((element) => {
+    result.forEach((element: any) => {
       const embed = new EmbedBuilder()
         .setAuthor({
           name: user.username,
