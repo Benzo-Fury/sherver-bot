@@ -1,5 +1,9 @@
 import { commandModule, CommandType } from "@sern/handler";
-import { ApplicationCommandOptionType, ColorResolvable, EmbedBuilder } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ColorResolvable,
+  EmbedBuilder,
+} from "discord.js";
 import { publish } from "../../plugins/publish";
 import { requirePermission } from "../../plugins/requirePermission";
 import { serverOnly } from "../../plugins/serverOnly";
@@ -30,34 +34,35 @@ export default commandModule({
         content:
           "No warning could be found. Try using /list to see all warning for a specific user.",
       });
-    const user = await ctx.client.users.fetch(result.user)
-    const embed = new EmbedBuilder().setAuthor({
-      name: user.username,
-      iconURL: user.displayAvatarURL(),
-    })
-    .addFields(
+    const user = await ctx.client.users.fetch(result.user);
+    const embed = new EmbedBuilder()
+      .setAuthor({
+        name: user.username,
+        iconURL: user.displayAvatarURL(),
+      })
+      .addFields(
         {
-            name: "Reason:",
-            value: result.reason
+          name: "Reason:",
+          value: result.reason,
         },
         {
-            name: "User Warned:",
-            value: `<@${result.user}>`
+          name: "User Warned:",
+          value: `<@${result.user}>`,
         },
         {
-            name: "Mod:",
-            value: `<@${result.mod}>`
+          name: "Mod:",
+          value: `<@${result.mod}>`,
         },
         {
-            name: "Channel:",
-            value: `<#${result.channel}>`
+          name: "Channel:",
+          value: `<#${result.channel}>`,
         },
         {
-            name: "Time:",
-            value: result.time
+          name: "Time:",
+          value: result.time,
         }
-    )
-    .setColor("BLACK" as ColorResolvable);
-    await ctx.reply({embeds: [embed]})
+      )
+      .setColor("BLACK" as ColorResolvable);
+    await ctx.reply({ embeds: [embed] });
   },
 });
