@@ -23,7 +23,7 @@ export default eventModule({
     } else {
       const newXP = userResult.xp + xpToGive;
       const update = {
-        $inc: { xp: xpToGive },
+        xp: xpToGive,
         level: newXP >= 1000 ? userResult.level + 1 : userResult.level,
       };
       if (newXP >= 1000) {
