@@ -26,6 +26,9 @@ export default eventModule({
         $inc: { xp: xpToGive },
         level: newXP >= 1000 ? userResult.level + 1 : userResult.level,
       };
+      if (newXP >= 1000) {
+        update.xp = 1;
+      }
       await userSchema.updateOne({ _id: msg.author.id }, update);
     }
   },
