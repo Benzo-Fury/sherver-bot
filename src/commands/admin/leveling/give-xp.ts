@@ -28,7 +28,7 @@ export default commandModule({
     function isNegative(num: number) {
       return num < 0;
     }
-    const amount = ctx.interaction.options.getNumber("amount")!
+    const amount = ctx.interaction.options.getNumber("amount")!;
     const user = ctx.interaction.options.getUser("user")!;
     if (isNegative(amount) || isDecimal(amount)) {
       return await ctx.reply({
@@ -37,7 +37,7 @@ export default commandModule({
       });
     }
 
-    const userResult: any = await userSchema.findOne({_id: user.id});
+    const userResult: any = await userSchema.findOne({ _id: user.id });
     if (!userResult) {
       await userSchema.create({ _id: user.id, level: 1, xp: amount });
     } else {
@@ -45,14 +45,15 @@ export default commandModule({
       const levels = Math.floor(xp / 1000);
       const remainingXp = xp % 1000;
       const update = {
-        $set: {
-          xp: remainingXp,
-          level: userResult.level + levels,
-        },
+        xp: remainingXp,
+        level: userResult.level + levels,
       };
+      if (remainingXp >= 1000) {
+        update.xp = 1;
+      }
       await userSchema.updateOne({ _id: user.id }, update);
     }
 
-    await ctx.reply('Xp has been given.')
+    await ctx.reply("Xp has been given.");
   },
 });
