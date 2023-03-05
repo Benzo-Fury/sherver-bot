@@ -53,7 +53,9 @@ export default commandModule({
       .setProgressBar("#FFFFFF", "COLOR")
       .setUsername(ctx.user.username)
       .setDiscriminator(ctx.user.discriminator)
-      .setRank(await getUserRank(ctx.user.id), "#");
+      .setRank(await getUserRank(ctx.user.id), "#")
+      .setLevel(userResult.level)
+      .setCustomStatusColor('#ADD8E6');
     rank.build().then(async (buffer) => {
       canvacord.write(buffer, "RankCard.png");
       await ctx.reply({ files: [buffer] });
