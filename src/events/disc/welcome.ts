@@ -16,6 +16,7 @@ export default eventModule({
   plugins: [],
   name: "guildMemberAdd",
   async execute(member: GuildMember) {
+    return
     if (member.guild.id !== "1080050500155748365") return;
     const serverResult: any = await serverSchema.findOne({
       _id: "1080050500155748365",
