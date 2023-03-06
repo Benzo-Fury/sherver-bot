@@ -15,7 +15,7 @@
   ],
   "license": "UNLICENSED",
   "dependencies": {
-    "@sern/handler": "^2.5.0",
+    "@sern/handler": "^2.5.3",
     "canvacord": "^5.4.8",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
