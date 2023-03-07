@@ -1,5 +1,5 @@
 import { commandModule, CommandType } from "@sern/handler";
-import { ApplicationCommandOptionType } from "discord.js";
+import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, EmbedBuilder, TextChannel } from "discord.js";
 import { publish } from "../../plugins/publish";
 import { requirePermission } from "../../plugins/requirePermission";
 import { serverOnly } from "../../plugins/serverOnly";
@@ -19,17 +19,46 @@ export default commandModule({
       type: ApplicationCommandOptionType.User,
       required: true,
     },
+    {
+      name: "reason",
+      description: "The reason this user is being banned.",
+      type: ApplicationCommandOptionType.String,
+      required: false
+    }
   ],
   execute: async (ctx) => {
     const user = ctx.interaction.options.getUser("user")!;
     const member = await ctx.guild?.members.fetch(user)!;
+    const reason = ctx.interaction.options.getString('reason') || "No reason provided."
     if (!member.bannable) {
       return await ctx.reply({
         content: "I cannot ban that member!",
         ephemeral: true,
       });
     }
+    //alert user and give appeal option
+    //creating embed
+    const embed = new EmbedBuilder()
+      .setColor("#ff5050")
+      .setTitle("You've Been Banned!")
+      .setDescription(`You've been banned from LispyRedHead's server. A ban appeal can be submitted by clicking the button bellow. \n\nThis ban was initiated with reason: \`\`${reason}\`\``)
+      .setTimestamp()
+    //creating row
+    const row = new ActionRowBuilder<ButtonBuilder>()
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId(`appeal`)
+          .setLabel('Ban Appeal')
+          .setStyle(ButtonStyle.Primary),
+      );
+    try {
+      await user.send({ embeds: [embed], components: [row] })
+    } catch {
+      // TODO: send an embed here saying user could not be messaged
+    }
+    //ban user and alert mods
     await member.ban()
     await ctx.reply(`I have banned ${member.displayName}.`)
+    // TODO: change this to an embed
   },
 });
