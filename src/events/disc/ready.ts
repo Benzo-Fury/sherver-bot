@@ -9,7 +9,7 @@ dotenv.config();
 export default eventModule({
   type: EventType.Discord,
   plugins: [],
-  name: "ready", //name of event.
+  name: "ready",
   async execute(client: Client) {
     //connecting to mongodb db
     await mongoose.connect(process.env.MONGOURI || "", {
