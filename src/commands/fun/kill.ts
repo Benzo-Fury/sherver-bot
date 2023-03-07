@@ -38,7 +38,7 @@ export default commandModule({
             iconURL: ctx.user.displayAvatarURL(),
           })
           .setDescription(`You successfully killed ${member.displayName}.`)
-          .setFooter('Congrats');
+          .setFooter({text: 'Congrats'});
         await ctx.reply({ embeds: [embed] });
       } else {
         await (await ctx.guild?.members.fetch(ctx.user.id)!).timeout(10000);
