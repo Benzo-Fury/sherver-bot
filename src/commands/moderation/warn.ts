@@ -155,7 +155,7 @@ export default commandModule({
           .setTimestamp();
         await user.send({ embeds: [userEmbed] });
       } catch {
-        // TODO: send message in channel alerting mod that user did not get notified
+        await (ctx.channel as TextChannel).send("That user has dm's off and did not receive there warning. It has still been recorded.")
       }
 
       // Update the database
