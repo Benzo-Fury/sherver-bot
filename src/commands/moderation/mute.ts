@@ -35,6 +35,7 @@ export default commandModule({
             return await ctx.reply({ content: "I cannot mute that user. Ask a admin to check my role is above there highest role.", ephemeral: true })
         }
         try {
+            // TODO: allow mods to input 1h, 1m, 1s and bot sets that time.
             await member.timeout(time, reason)
         } catch {
             return await ctx.reply({ content: "There was an error while processing your request.", ephemeral: true })
