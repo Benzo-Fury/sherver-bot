@@ -13,7 +13,7 @@
     "sern",
     "discord.js"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "@sern/handler": "^2.5.3",
     "canvacord": "^5.4.8",
