@@ -27,6 +27,7 @@ export default commandModule({
     }
   ],
   execute: async (ctx) => {
+    // TODO: can specify that user can not apply for appeal
     const user = ctx.interaction.options.getUser("user")!;
     const member = await ctx.guild?.members.fetch(user)!;
     const reason = ctx.interaction.options.getString('reason') || "No reason provided."
@@ -54,11 +55,20 @@ export default commandModule({
     try {
       await user.send({ embeds: [embed], components: [row] })
     } catch {
-      // TODO: send an embed here saying user could not be messaged
+      const errorEmbed = new EmbedBuilder()
+        .setColor('#ff5050')
+        .setTitle("Well this is awkward")
+        .setDescription("A recent ban request failed to alert the user that they've been banned within dms. Not to worry, the ban has still been initiated and the user will not have access to appeal.")
+        .setTimestamp()
+      return await ctx.reply({ embeds: [embed] })
     }
     //ban user and alert mods
-    await member.ban()
-    await ctx.reply(`I have banned ${member.displayName}.`)
-    // TODO: change this to an embed
+    await member.ban({ reason: reason })
+    const banEmbed = new EmbedBuilder()
+      .setColor('#ff5050')
+      .setTitle('Banned')
+      .setDescription(`I have banned ${user.username} with reason:\n\n\`\`${reason}\`\``)
+      .setTimestamp()
+    await ctx.reply({ embeds: [embed] })
   },
 });
