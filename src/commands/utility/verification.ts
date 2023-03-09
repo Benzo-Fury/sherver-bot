@@ -68,7 +68,7 @@ export default commandModule({
         "📜 By clicking the button below, you acknowledge that you have read and understand the <#1080054195048161310> of this server. You agree to follow these <#1080054195048161310> and understand that failure to do so may result in disciplinary action by the server moderators. \n\n💪 Clicking the button below confirms your acceptance of these terms and grants you full access to the server."
       )
       .setColor("#1f76cc")
-      .setFooter({text: 'Welcome aboard! 🚀'});
+      .setFooter({text: 'Welcome aboard! 💦'});
     //creating row here
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
