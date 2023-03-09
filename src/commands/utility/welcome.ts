@@ -31,9 +31,25 @@ export default commandModule({
   ],
   execute: async (ctx) => {
     const channel = ctx.interaction.options.getChannel('channel')!;
-    if(channel.type !== ChannelType.GuildText) {
-        return ctx.reply({content: "The channel must be a text channel!", ephemeral: true});
+    if (channel.type !== ChannelType.GuildText) {
+      return ctx.reply({ content: "The channel must be a text channel!", ephemeral: true });
     };
-    
+    await serverSchema.findOneAndUpdate(
+      {
+        _id: ctx.guild?.id
+      },
+      {
+        welcomeChannel: channel.id
+      },
+      {
+        upsert: true
+      }
+    )
+    const msg = await ctx.reply('That channel has now been set to the welcome channel.')
+    setTimeout(async () => {
+      try {
+        await msg.delete()
+      } catch {}
+    }, 2000);
   },
 });

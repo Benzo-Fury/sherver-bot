@@ -2,40 +2,38 @@ import { eventModule, EventType } from "@sern/handler";
 import { EmbedBuilder, GuildMember, TextChannel } from "discord.js";
 import dotenv from "dotenv";
 import serverSchema from "../../utility/database/schemas/serverSchema";
-import { Configuration, OpenAIApi } from "openai";
 
 dotenv.config();
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAIAPI,
-});
-const openai = new OpenAIApi(configuration);
+let welcomeMsgs = [
+  "Welcome to LispyRedHead's server! We're so happy you've decided to join our community. To access all of our channels and features, please click the verification button in the verification channel.",
+  "Hey there! Thanks for joining LispyRedHead's server. We're a community for everyone, and we can't wait to get to know you better. Just click the verification button in the verification channel to unlock the rest of the server.",
+  "Welcome to LispyRedHead's server, a place where everyone is welcome. To access all the channels and features, make sure you verify your account by clicking the button in the verification channel.",
+  "Hi there! We're thrilled you've joined LispyRedHead's server. Our community is open to all, and we can't wait to see you inside. To get started, please click the verification button in the verification channel.",
+  "Thanks for joining LispyRedHead's server! We're a community that embraces diversity, and we're glad you're here. To unlock the rest of the server, please click the verification button in the verification channel.",
+  "Welcome to LispyRedHead's server, where everyone is welcome to join our community. To access all the channels and features, make sure you click the verification button in the verification channel.",
+  "Hey, welcome to LispyRedHead's server! We're excited to have you join us. To get the most out of our community, please verify your account by clicking the button in the verification channel.",
+  "Welcome to LispyRedHead's server, a community where everyone is valued and respected. To unlock the rest of the server, make sure you verify your account by clicking the button in the verification channel."
+]
 
 export default eventModule({
   type: EventType.Discord,
   plugins: [],
   name: "guildMemberAdd",
   async execute(member: GuildMember) {
-    return
     if (member.guild.id !== "1080050500155748365") return;
     const serverResult: any = await serverSchema.findOne({
       _id: "1080050500155748365",
     });
     if (!serverResult) return;
-    let welcomeChannel = await member.guild.channels.fetch(serverResult.memberRole) as TextChannel;
+    let welcomeChannel = await member.guild.channels.fetch(serverResult.welcomeChannel) as TextChannel;
     if (!welcomeChannel) return;
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: "Say this is a test",
-      max_tokens: 7,
-      temperature: 0,
-    });
     const embed = new EmbedBuilder()
-    .setAuthor({name: `Welcome ${member.displayName}!`})
-    .setDescription(response.data.choices[0].text!)
-    .setFooter({text: `You are the #${member.guild.memberCount} member`})
-    .setColor("#ff5050");
+      .setAuthor({ name: `Welcome ${member.displayName}!` })
+      .setDescription(welcomeMsgs[Math.floor(Math.random() * welcomeMsgs.length)])
+      .setFooter({ text: `You are the #${member.guild.memberCount} member.` })
+      .setColor("#ff5050");
 
-    await welcomeChannel.send({embeds: [embed]})
+    await welcomeChannel.send({ embeds: [embed] })
   },
 });
