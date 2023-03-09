@@ -62,17 +62,19 @@ export default commandModule({
     const msg = await ctx.reply("Verification setup complete.");
     //creating embed here
     const embed = new EmbedBuilder()
-      .setTitle("Verification!")
+      .setAuthor({ name: ctx.guild?.name || '', iconURL: ctx.guild?.iconURL() || '' })
+      .setTitle("Click Below!")
       .setDescription(
-        "To gain full access to this server you are required to click/tap the button below. By doing this you are agreeing to abide by our <#1080054195048161310>."
+        "📜 By clicking the button below, you acknowledge that you have read and understand the <#1080054195048161310> of this server. You agree to follow these <#1080054195048161310> and understand that failure to do so may result in disciplinary action by the server moderators. \n\n💪 Clicking the button below confirms your acceptance of these terms and grants you full access to the server."
       )
-      .setColor("#00FF00");
+      .setColor("#1f76cc")
+      .setFooter({text: 'Welcome aboard! 🚀'});
     //creating row here
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
         .setCustomId("verify")
         .setLabel("Verify")
-        .setStyle(ButtonStyle.Success)
+        .setStyle(ButtonStyle.Primary)
     );
     await channel.send({ embeds: [embed], components: [row] });
     setTimeout(() => {
