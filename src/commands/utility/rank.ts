@@ -2,12 +2,22 @@ import { commandModule, CommandType } from "@sern/handler";
 import { publish } from "../../plugins/publish";
 import userSchema from "../../utility/database/schemas/userSchema";
 import canvacord from "canvacord";
+import { ApplicationCommandOptionType } from "discord.js";
 
 export default commandModule({
   type: CommandType.Slash,
   plugins: [publish()],
   description: "Gets your current rank.",
+  options: [
+    {
+      name: "user",
+      description: "The user who's rank you would like to see.",
+      type: ApplicationCommandOptionType.User,
+      required: false
+    }
+  ],
   execute: async (ctx) => {
+    const user = ctx.interaction.options.getUser('user') || ctx.user
     async function getUserRank(userId: any) {
       const user: any = await userSchema.findById(userId)!;
 
@@ -48,18 +58,17 @@ export default commandModule({
         return rank[0].count + 1;
       }
     }
-    console.log(await getUserRank(ctx.user.id));
-    const userResult = await userSchema.findOne({ _id: ctx.user.id })!;
+    const userResult = await userSchema.findOne({ _id: user })!;
     if (!userResult) return;
     const rank = new canvacord.Rank()
-      .setAvatar(ctx.user.displayAvatarURL())
+      .setAvatar(user.displayAvatarURL())
       .setCurrentXP(userResult.xp)
       .setRequiredXP(1000)
       .setStatus("online")
       .setProgressBar("#FFFFFF", "COLOR")
-      .setUsername(ctx.user.username)
-      .setDiscriminator(ctx.user.discriminator)
-      .setRank(await getUserRank(ctx.user.id), "#")
+      .setUsername(user.username)
+      .setDiscriminator(user.discriminator)
+      .setRank(await getUserRank(user), "#")
       .setLevel(userResult.level)
       .setCustomStatusColor("#ADD8E6");
     rank.build().then(async (buffer) => {
