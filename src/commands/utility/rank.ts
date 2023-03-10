@@ -11,6 +11,13 @@ export default commandModule({
     async function getUserRank(userId: any) {
       const user: any = await userSchema.findById(userId)!;
 
+      if (!user) {
+        return await ctx.reply({
+          content: "Please try that again.",
+          ephemeral: true,
+        });
+      }
+
       const rank = await userSchema.aggregate([
         {
           $match: {
@@ -43,8 +50,7 @@ export default commandModule({
     }
     console.log(await getUserRank(ctx.user.id));
     const userResult = await userSchema.findOne({ _id: ctx.user.id })!;
-    if (!userResult)
-      return await ctx.reply({ content: "Please try again", ephemeral: true });
+    if (!userResult) return;
     const rank = new canvacord.Rank()
       .setAvatar(ctx.user.displayAvatarURL())
       .setCurrentXP(userResult.xp)
@@ -55,7 +61,7 @@ export default commandModule({
       .setDiscriminator(ctx.user.discriminator)
       .setRank(await getUserRank(ctx.user.id), "#")
       .setLevel(userResult.level)
-      .setCustomStatusColor('#ADD8E6');
+      .setCustomStatusColor("#ADD8E6");
     rank.build().then(async (buffer) => {
       canvacord.write(buffer, "RankCard.png");
       await ctx.reply({ files: [buffer] });

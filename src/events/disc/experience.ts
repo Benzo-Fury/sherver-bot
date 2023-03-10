@@ -12,7 +12,7 @@ export default eventModule({
   async execute(msg: Message) {
     if (!msg.inGuild()) return;
     if (msg.author.bot) return;
-    const xpToGive = Math.floor(Math.random() * (10 - 30 + 1)) + 10;
+    const xpToGive = Math.floor(Math.random() * 11) + 20;
     const userResult: any = await userSchema.findOne({ _id: msg.author.id });
     if (!userResult) {
       await userSchema.create({
@@ -23,7 +23,7 @@ export default eventModule({
     } else {
       const newXP = userResult.xp + xpToGive;
       const update = {
-        xp: xpToGive,
+        xp: newXP,
         level: newXP >= 1000 ? userResult.level + 1 : userResult.level,
       };
       if (newXP >= 1000) {
