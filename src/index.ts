@@ -35,6 +35,7 @@ export const useContainer = Sern.makeDependencies<MyDependencies>({
 });
 
 Sern.init({
+	defaultPrefix: ')',
 	commands: 'dist/commands',
 	events: 'dist/events',
 	containerConfig: {
