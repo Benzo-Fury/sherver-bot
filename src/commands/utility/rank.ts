@@ -58,7 +58,7 @@ export default commandModule({
         return rank[0].count + 1;
       }
     }
-    const userResult = await userSchema.findOne({ _id: user })!;
+    const userResult = await userSchema.findOne({ _id: user.id })!;
     if (!userResult) return;
     const rank = new canvacord.Rank()
       .setAvatar(user.displayAvatarURL())
@@ -68,7 +68,7 @@ export default commandModule({
       .setProgressBar("#FFFFFF", "COLOR")
       .setUsername(user.username)
       .setDiscriminator(user.discriminator)
-      .setRank(await getUserRank(user), "#")
+      .setRank(await getUserRank(user.id), "#")
       .setLevel(userResult.level)
       .setCustomStatusColor("#ADD8E6");
     rank.build().then(async (buffer) => {

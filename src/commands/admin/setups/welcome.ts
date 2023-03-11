@@ -8,10 +8,10 @@ import {
   EmbedBuilder,
   TextChannel,
 } from "discord.js";
-import { publish } from "../../plugins/publish";
-import { requirePermission } from "../../plugins/requirePermission";
-import { serverOnly } from "../../plugins/serverOnly";
-import serverSchema from "../../utility/database/schemas/serverSchema";
+import { publish } from "../../../plugins/publish";
+import { requirePermission } from "../../../plugins/requirePermission";
+import { serverOnly } from "../../../plugins/serverOnly";
+import serverSchema from "../../../utility/database/schemas/serverSchema";
 
 export default commandModule({
   type: CommandType.Slash,
