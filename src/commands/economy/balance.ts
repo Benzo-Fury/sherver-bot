@@ -23,7 +23,7 @@ export default commandModule({
     },
   ],
   execute: async (ctx) => {
-    const user = ctx.interaction.options.getUser("user")!;
+    const user = ctx.interaction.options.getUser("user")! || ctx.user;
     const bal = await userSchema.findOne({_id: user.id})
     if(!bal) {
         await userSchema.create({_id: user.id})
@@ -33,5 +33,7 @@ export default commandModule({
     .setColor('#2b2d31')
     .setAuthor({name: `${ctx.user.username} | Balance`, iconURL: ctx.user.displayAvatarURL()})
     .setDescription(`You currently have **${bal.money} ${process.env.CURRENCY}**`)
+
+    await ctx.reply({embeds: [embed]})
   },
 });
