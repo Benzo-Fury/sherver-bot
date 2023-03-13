@@ -10,6 +10,7 @@ export default eventModule({
   plugins: [],
   name: "messageCreate",
   async execute(msg: Message) {
+    //TODO: Add xp multiplier 
     if (!msg.inGuild()) return;
     if (msg.author.bot) return;
     const xpToGive = Math.floor(Math.random() * 11) + 20;
