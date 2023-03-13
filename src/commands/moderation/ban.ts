@@ -69,6 +69,6 @@ export default commandModule({
       .setTitle('Banned')
       .setDescription(`I have banned ${user.username} with reason:\n\n\`\`${reason}\`\``)
       .setTimestamp()
-    await ctx.reply({ embeds: [embed] })
+    await ctx.reply({ embeds: [banEmbed] })
   },
 });
