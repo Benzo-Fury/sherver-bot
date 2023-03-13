@@ -1,7 +1,7 @@
 import { eventModule, EventType } from "@sern/handler";
 import { EmbedBuilder, GuildMember, TextChannel } from "discord.js";
 import dotenv from "dotenv";
-import serverSchema from "../../utility/database/schemas/serverSchema";
+import serverSchema from "../../../utility/database/schemas/serverSchema";
 
 dotenv.config();
 
