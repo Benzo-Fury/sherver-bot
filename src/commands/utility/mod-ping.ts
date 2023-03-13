@@ -17,14 +17,16 @@ export default commandModule({
     }
 
     const embed = new EmbedBuilder()
-    .setTitle('Mod Ping!')
-    .setColor("#FF7F7F")
-    .setDescription(`<@${ctx.user.id}> has pinged the moderators.`)
-    .setTimestamp()
+      .setTitle("Mod Ping!")
+      .setColor("#FF7F7F")
+      .setDescription(`<@${ctx.user.id}> has pinged the moderators.`)
+      .setTimestamp();
 
-    const msg = await (ctx.channel as TextChannel).send('<@&1080683192543105125>')
-    await msg.delete()
+    const msg = await (ctx.channel as TextChannel).send(
+      "<@&1080683192543105125>"
+    );
+    await msg.delete();
 
-    await ctx.reply({embeds: [embed]})
+    await ctx.reply({ embeds: [embed] });
   },
 });
