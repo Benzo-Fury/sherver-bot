@@ -1,11 +1,15 @@
 import { commandModule, CommandType } from "@sern/handler";
 import { ApplicationCommandOptionType } from "discord.js";
 import { publish } from "../../../plugins/publish";
+import { requirePermission } from "../../../plugins/requirePermission";
+import { serverOnly } from "../../../plugins/serverOnly";
 import userSchema from "../../../utility/database/schemas/userSchema";
 
 export default commandModule({
   type: CommandType.Slash,
-  plugins: [publish()],
+  plugins: [publish(),
+    serverOnly(["1080050500155748365"], "This command cannot be used here."),
+    requirePermission("user", ["Administrator"], "You are not a moderator")],
   description: "Removes xp from the specified user.",
   options: [
     {
