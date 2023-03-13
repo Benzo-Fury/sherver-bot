@@ -70,5 +70,9 @@ export default commandModule({
       .setDescription(`I have banned ${user.username} with reason:\n\n\`\`${reason}\`\``)
       .setTimestamp()
     await ctx.reply({ embeds: [banEmbed] })
+    //send in logs
+    const logChannel = await ctx.guild?.channels.fetch('1080302218458177547') as TextChannel
+    if(!logChannel) return;
+    await logChannel.send({embeds: [banEmbed]})
   },
 });
