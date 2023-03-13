@@ -27,7 +27,8 @@ const userSchema = new mongoose.Schema({
   },
   pingBlackListed: {
     type: Boolean,
-    required: true
+    required: true,
+    default: false
   }
 });
 
