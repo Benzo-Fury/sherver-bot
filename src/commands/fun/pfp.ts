@@ -17,7 +17,7 @@ export default commandModule({
 	execute: async (ctx) => {
         const user = ctx.interaction.options.getUser('user') || ctx.user
 		const embed = new EmbedBuilder()
-        .setAuthor({name: `Pfp - ${user.username}`})
+        .setAuthor({name: `Pfp - ${user.username}`, iconURL: user.displayAvatarURL()})
         .setImage(user.displayAvatarURL({size: 1024}))
         .setColor("#2b2d31")
         .setTimestamp()
