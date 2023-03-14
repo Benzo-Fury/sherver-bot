@@ -29,7 +29,8 @@ export default commandModule({
     if (!desc) {
       return await ctx.reply({ content: "Specify a desc.", ephemeral: true });
     }
-    await ctx.message.delete()
+    const msg = await (ctx.channel as TextChannel).send('<@&1083955302296199238>')
+    await msg.delete()
     const embed = new EmbedBuilder()
       .setColor("#1f76cc")
       .setAuthor({
